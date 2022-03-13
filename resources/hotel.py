@@ -25,4 +25,4 @@ hoteis = [
 ]
 class Hoteis(Resource):
     def get(self):
-        return {'hoteis': 'Meus hoteis'}
+        return {'hoteis': hoteis}
