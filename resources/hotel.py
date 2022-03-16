@@ -28,11 +28,16 @@ class Hoteis(Resource):
         return {'hoteis': hoteis}
 
 class Hotel(Resource):
-    def get(self, hotel_id):
+    def find_hotel(hotel_id):
         for hotel in hoteis:
             if hotel_id==hotel['hotel_id']:
                 return hotel
-        return {'message': 'Hotel nao econtrado'}, 404
+        return None
+    def get(self, hotel_id):
+        hotel = Hotel.find_hotel(hotel_id)
+        if hotel:
+            return hotel
+        return {'message': 'Hotel nao encontrado'}, 404
 
     def post(self, hotel_id):
         argumentos = reqparse.RequestParser()
@@ -54,6 +59,20 @@ class Hotel(Resource):
         return novo_hotel, 200
 
     def put(self, hotel_id):
-        pass
+        argumentos = reqparse.RequestParser()
+        argumentos.add_argument('nome')
+        argumentos.add_argument('estrelas')
+        argumentos.add_argument('diaria')
+        argumentos.add_argument('cidade')
+        dados = argumentos.parse_args()
+
+        novo_hotel = {
+            'hotel_id': 'delta',
+            'nome': dados['nome'],
+            'estrelas': dados['estrelas'],
+            'diaria': dados['diaria'],
+            'cidade': dados['cidade']
+        }
+        return novo_hotel, 200
     def delete(self, hotel_id):
         pass
