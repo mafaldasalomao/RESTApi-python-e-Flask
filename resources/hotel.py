@@ -28,6 +28,11 @@ class Hoteis(Resource):
         return {'hoteis': hoteis}
 
 class Hotel(Resource):
+    argumentos = reqparse.RequestParser()
+    argumentos.add_argument('nome')
+    argumentos.add_argument('estrelas')
+    argumentos.add_argument('diaria')
+    argumentos.add_argument('cidade')
     def find_hotel(hotel_id):
         for hotel in hoteis:
             if hotel_id==hotel['hotel_id']:
@@ -40,39 +45,22 @@ class Hotel(Resource):
         return {'message': 'Hotel nao encontrado'}, 404
 
     def post(self, hotel_id):
-        argumentos = reqparse.RequestParser()
-        argumentos.add_argument('nome')
-        argumentos.add_argument('estrelas')
-        argumentos.add_argument('diaria')
-        argumentos.add_argument('cidade')
-        dados = argumentos.parse_args()
-
-        novo_hotel = {
-            'hotel_id': 'delta',
-            'nome': dados['nome'],
-            'estrelas': dados['estrelas'],
-            'diaria': dados['diaria'],
-            'cidade': dados['cidade']
-        }
+        dados = Hotel.argumentos.parse_args()
+        novo_hotel = {'hotel_id': 'delta', **dados}
 
         hoteis.append(novo_hotel)
         return novo_hotel, 200
 
     def put(self, hotel_id):
-        argumentos = reqparse.RequestParser()
-        argumentos.add_argument('nome')
-        argumentos.add_argument('estrelas')
-        argumentos.add_argument('diaria')
-        argumentos.add_argument('cidade')
-        dados = argumentos.parse_args()
+        dados = Hotel.argumentos.parse_args()
+        novo_hotel = {'hotel_id': hotel_id, **dados}
+        hotel = Hotel.find_hotel(hotel_id)
+        if hotel:
+            hotel.update(novo_hotel)
+            return novo_hotel, 200
+        hoteis.append(novo_hotel)
+        return novo_hotel, 201
 
-        novo_hotel = {
-            'hotel_id': 'delta',
-            'nome': dados['nome'],
-            'estrelas': dados['estrelas'],
-            'diaria': dados['diaria'],
-            'cidade': dados['cidade']
-        }
-        return novo_hotel, 200
+
     def delete(self, hotel_id):
         pass
