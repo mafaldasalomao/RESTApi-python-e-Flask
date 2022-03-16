@@ -49,9 +49,10 @@ class Hotel(Resource):
             'diaria': dados['diaria'],
             'cidade': dados['cidade']
         }
-        hoteis.append(novo_hotel)
 
+        hoteis.append(novo_hotel)
         return novo_hotel, 200
+
     def put(self, hotel_id):
         pass
     def delete(self, hotel_id):
